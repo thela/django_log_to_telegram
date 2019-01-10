@@ -39,7 +39,7 @@ Different errors will be fired if the BOT_TOKEN is not active or if there is no 
                 'level': 'ERROR',
                 'filters': ['require_debug_false'],
                 'class': 'django_log_to_telegram.log.AdminTelegramHandler',
-                'bot_id': BOT_ID,
+                'bot_id': LOG_TO_TELEGRAM_BOT_TOKEN,
             }
         },
         'loggers': {

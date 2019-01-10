@@ -2,6 +2,7 @@
 Django Log to Telegram
 ======================
 
+This is a simple logger that sends 500 exceptions to a Telegram bot of your choice.
 
 Quick start
 -----------

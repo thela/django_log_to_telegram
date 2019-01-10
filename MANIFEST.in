@@ -1,0 +1,7 @@
+include LICENSE
+include README.rst
+include requirements.txt
+recursive-include docs *
+
+global-exclude *.py[co]
+global-exclude test_app/*

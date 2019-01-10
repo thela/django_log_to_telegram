@@ -1,0 +1,63 @@
+======================
+Django Log to Telegram
+======================
+
+
+Quick start
+-----------
+
+Install django-log-to-telegram:
+
+.. code:: bash
+
+    pip install git+https://github.com/thela/django-log-to-telegram
+
+1. register a bot on Telegram (`with BotFather <https://core.telegram.org/bots#6-botfather>`_), start a chat with it and put
+the Api token in settings.py:
+
+.. code:: python
+
+    LOG_TO_TELEGRAM_BOT_TOKEN = '12345678:replace-me-with-real-token'
+
+Different errors will be fired if the BOT_TOKEN is not active or if there is no chat active with it.
+
+2. add the 'django_log_to_telegram.log.AdminTelegramHandler' to your app's logging configuration, for example:
+
+.. code:: python
+
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'filters': {
+            'require_debug_false': {
+                '()': 'django.utils.log.RequireDebugFalse'
+            }
+        },
+        'handlers': {
+            'telegram_log': {
+                'level': 'ERROR',
+                'filters': ['require_debug_false'],
+                'class': 'django_log_to_telegram.log.AdminTelegramHandler',
+                'bot_id': BOT_ID,
+            }
+        },
+        'loggers': {
+            'django.request': {
+                'handlers': ['telegram_log'],
+                'level': 'ERROR',
+                'propagate': True,
+            },
+        },
+    }
+
+If everything went well, you bot will then begin sendind messages on 500 exceptions.
+
+There is a *very basic* test app provided in the folder test_app. It is configured to send errors to telegram even with
+DEBUG active, so that it can be useful with just a
+
+.. code:: python
+
+    ./manage.py runserver
+
+It does not provide any database configuration, and most of Django basic settings are stripped out, so any use of it
+outside the very basic testing of the django_log_to_telegram mechanism is deprecated to say the least.

@@ -87,7 +87,6 @@ class AdminTelegramHandler(logging.Handler):
             try:
                 chat_id = r_json['result'][0]['message']['chat']['id']
             except IndexError:
-                print(r.json())
                 raise IndexError('Did you start a chat with your bot?')
         else:
             raise KeyError('the BOT_TOKEN you provided does not seem to be active')

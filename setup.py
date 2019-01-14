@@ -30,6 +30,7 @@ setup(
         'Framework :: Django',
         'Framework :: Django :: 1.9',
         'Framework :: Django :: 2.0',
+        'Framework :: Django :: 2.1',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Operating System :: OS Independent',

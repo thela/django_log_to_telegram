@@ -1,6 +1,7 @@
 import io
 import logging
 import traceback
+import warnings
 
 import requests
 
@@ -73,10 +74,17 @@ class AdminTelegramHandler(logging.Handler):
     def emit(self, record):
         self.send_message(self.format(record))
 
+    def test_token(self):
+        response = requests.get(self.bot_url.format("getMe"))
+        print("getMe returned: " + str(response.json()))
+        print("getMe status code: " + str(response.status_code))
+
     def get_chat_id(self):
         """
         Method to extract chat id from telegram request.
         """
+        chat_id = None
+
         get_updates_url = '{bot_url}getUpdates'.format(
             bot_url=self.bot_url
         )
@@ -88,23 +96,31 @@ class AdminTelegramHandler(logging.Handler):
             try:
                 chat_id = r_json['result'][0]['message']['chat']['id']
             except IndexError:
-                raise IndexError('Did you start a chat with your bot?')
+                warnings.warn('Did you start a chat with your bot?', RuntimeWarning)
+                #raise IndexError('Did you start a chat with your bot?')
         else:
-            raise KeyError('the BOT_TOKEN you provided does not seem to be active. BOT_TOKEN={}'.format(
+            warnings.warn('the BOT_TOKEN you provided does not seem to be active. BOT_TOKEN={}'.format(
                 self.bot_id
-            ))
+            ), RuntimeWarning)
+            #raise KeyError('the BOT_TOKEN you provided does not seem to be active. BOT_TOKEN={}'.format(
+            #    self.bot_id
+            #))
 
         return chat_id
 
     def prepare_json_for_answer(self, data):
+        if not self.chat_id:
+            self.chat_id = self.get_chat_id()
+        if self.chat_id:
+            json_data = {
+                "chat_id": self.chat_id,
+                "text": data,
+                "parse_mode": 'HTML',
+            }
 
-        json_data = {
-            "chat_id": self.chat_id,
-            "text": data,
-            "parse_mode": 'HTML',
-        }
-
-        return json_data
+            return json_data
+        else:
+            return {}
 
     def send_message(self, message):
         message_url = '{bot_url}sendMessage'.format(

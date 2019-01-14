@@ -83,13 +83,16 @@ class AdminTelegramHandler(logging.Handler):
         r = requests.get(get_updates_url)
         r_json = r.json()
 
+        # TODO put warning and try again
         if r_json['ok']:
             try:
                 chat_id = r_json['result'][0]['message']['chat']['id']
             except IndexError:
                 raise IndexError('Did you start a chat with your bot?')
         else:
-            raise KeyError('the BOT_TOKEN you provided does not seem to be active')
+            raise KeyError('the BOT_TOKEN you provided does not seem to be active. BOT_TOKEN={}'.format(
+                self.bot_id
+            ))
 
         return chat_id
 

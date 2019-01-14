@@ -89,7 +89,7 @@ LOGGING = {
             'level': 'ERROR',
             #'filters': ['require_debug_false'],
             'class': 'django_log_to_telegram.log.AdminTelegramHandler',
-            'bot_id': LOG_TO_TELEGRAM_BOT_TOKEN,
+            'bot_token': LOG_TO_TELEGRAM_BOT_TOKEN,
         }
     },
     'loggers': {

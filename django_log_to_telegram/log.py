@@ -1,7 +1,6 @@
 import io
 import logging
 import traceback
-import warnings
 
 import requests
 
@@ -55,65 +54,37 @@ class AdminTelegramHandler(logging.Handler):
     """An exception log handler that send a short log to a telegram bot.
 
     """
-    api_url = 'https://api.telegram.org/'
 
-    def __init__(self, bot_id, include_html=False, email_backend=None):
+    def __init__(self, *args, **kwargs):
         super().__init__()
-        self.include_html = include_html
-        self.email_backend = email_backend
-        self.bot_id = bot_id
 
-        self.bot_url = '{api_url}bot{bot_id}/'.format(
-            api_url=self.api_url,
-            bot_id=self.bot_id
-        )
-        self.chat_id = self.get_chat_id()
+        ''''''
+        if 'bot_token' in kwargs:
+            self.bot_token = kwargs['bot_token']
+        elif 'bot_id' in kwargs:
+            self.bot_token = kwargs['bot_id']
+
+        self.bot_data = None
 
         self.setFormatter(TelegramFormatter())
 
     def emit(self, record):
+        if not self.bot_data:
+            from django_log_to_telegram.models import BotData
+            self.bot_data, created = BotData.objects.get_or_create(
+                bot_token=self.bot_token
+            )
+
+            if created:
+                self.bot_data.get_chat_id()
         self.send_message(self.format(record))
 
-    def test_token(self):
-        response = requests.get(self.bot_url.format("getMe"))
-        print("getMe returned: " + str(response.json()))
-        print("getMe status code: " + str(response.status_code))
-
-    def get_chat_id(self):
-        """
-        Method to extract chat id from telegram request.
-        """
-        chat_id = None
-
-        get_updates_url = '{bot_url}getUpdates'.format(
-            bot_url=self.bot_url
-        )
-        r = requests.get(get_updates_url)
-        r_json = r.json()
-
-        # TODO put warning and try again
-        if r_json['ok']:
-            try:
-                chat_id = r_json['result'][0]['message']['chat']['id']
-            except IndexError:
-                warnings.warn('Did you start a chat with your bot?', RuntimeWarning)
-                #raise IndexError('Did you start a chat with your bot?')
-        else:
-            warnings.warn('the BOT_TOKEN you provided does not seem to be active. BOT_TOKEN={}'.format(
-                self.bot_id
-            ), RuntimeWarning)
-            #raise KeyError('the BOT_TOKEN you provided does not seem to be active. BOT_TOKEN={}'.format(
-            #    self.bot_id
-            #))
-
-        return chat_id
-
     def prepare_json_for_answer(self, data):
-        if not self.chat_id:
-            self.chat_id = self.get_chat_id()
-        if self.chat_id:
+        if not self.bot_data.chat_id:
+            self.bot_data.get_chat_id()
+        if self.bot_data.chat_id:
             json_data = {
-                "chat_id": self.chat_id,
+                "chat_id": self.bot_data.chat_id,
                 "text": data,
                 "parse_mode": 'HTML',
             }
@@ -124,7 +95,7 @@ class AdminTelegramHandler(logging.Handler):
 
     def send_message(self, message):
         message_url = '{bot_url}sendMessage'.format(
-            bot_url=self.bot_url
+            bot_url=self.bot_data.bot_url()
         )
         prepared_data = self.prepare_json_for_answer(message)
         requests.post(message_url, json=prepared_data)

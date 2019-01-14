@@ -22,7 +22,17 @@ the Api token in settings.py:
 
 Different errors will be fired if the BOT_TOKEN is not active or if there is no chat active with it.
 
-2. add the 'django_log_to_telegram.log.AdminTelegramHandler' to your app's logging configuration, for example:
+2. add the 'django_log_to_telegram' to your INSTALLED_APPS setting:
+
+.. code:: python
+
+    INSTALLED_APPS = [
+        ...
+        'django_log_to_telegram',
+        ...
+    ]
+
+3. add the `django_log_to_telegram.log.AdminTelegramHandler` to your app's logging configuration, for example:
 
 .. code:: python
 
@@ -39,7 +49,7 @@ Different errors will be fired if the BOT_TOKEN is not active or if there is no 
                 'level': 'ERROR',
                 'filters': ['require_debug_false'],
                 'class': 'django_log_to_telegram.log.AdminTelegramHandler',
-                'bot_id': LOG_TO_TELEGRAM_BOT_TOKEN,
+                'bot_token': LOG_TO_TELEGRAM_BOT_TOKEN,
             }
         },
         'loggers': {
@@ -50,6 +60,11 @@ Different errors will be fired if the BOT_TOKEN is not active or if there is no 
             },
         },
     }
+
+if you want to test this logger in a debug environment, just remove the `filters': ['require_debug_false'],` line in the
+'handlers' dictionary.
+
+4. Run `python manage.py migrate` to create the django_log_to_telegram models.
 
 If everything went well, you bot will then begin sendind messages on 500 exceptions.
 

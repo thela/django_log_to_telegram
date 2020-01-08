@@ -25,7 +25,7 @@ class BotData(models.Model):
         if response.status_code == 200:
             r_json = response.json()
             if 'ok' in r_json and r_json['ok']:
-                print(r_json['result'])
+                #print(r_json['result'])
                 return True
         else:
             print(response.status_code, response.json())
@@ -58,3 +58,17 @@ class BotData(models.Model):
                 self.bot_token
             ), RuntimeWarning)
 
+    def send_test_message(self, message):
+        message_url = '{bot_url}sendMessage'.format(
+            bot_url=self.bot_url()
+        )
+        if not self.bot_data.chat_id:
+            self.bot_data.get_chat_id()
+        if self.bot_data.chat_id:
+            json_data = {
+                "chat_id": self.bot_data.chat_id,
+                "text": "this is just a drill",
+                "parse_mode": 'HTML',
+            }
+
+        requests.post(message_url, json=json_data)

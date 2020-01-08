@@ -11,7 +11,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name=name,
-    version='2019.04.01',
+    version='2019.10.30',
     packages=find_packages(),
     include_package_data=True,
     license='GNU General Public License v3 (GPLv3)',  # example license

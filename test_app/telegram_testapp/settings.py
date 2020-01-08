@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+
+    'django_log_to_telegram',
 ]
 
 MIDDLEWARE = [

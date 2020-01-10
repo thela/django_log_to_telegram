@@ -11,7 +11,7 @@ Install django-log-to-telegram:
 
 .. code:: bash
 
-    pip install -e 'git+https://github.com/thela/django_log_to_telegram.git#egg=django_log_to_telegram'
+    pip install django_log_to_telegram
 
 1. register a bot on Telegram (`with BotFather <https://core.telegram.org/bots#6-botfather>`_), start a chat with it and put
 the Api token in settings.py:

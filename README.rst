@@ -11,7 +11,7 @@ Install django-log-to-telegram:
 
 .. code:: bash
 
-    pip install -e django_log_to_telegram
+    pip install django_log_to_telegram
 
 1. register a bot on Telegram (`with BotFather <https://core.telegram.org/bots#6-botfather>`_), start a chat with it and put
 the Api token in settings.py:
@@ -66,9 +66,7 @@ if you want to test this logger in a debug environment, just remove the `filters
 
 4. Run `python manage.py migrate` to create the django_log_to_telegram models.
 
-#TODO creare un primo modello
-
-If everything went well, you bot will then begin sending messages on 500 exceptions.
+If everything went well, you bot will then begin sendind messages on 500 exceptions.
 
 There is a *very basic* test app provided in the folder test_app. It is configured to send errors to telegram even with
 DEBUG active, so that it can be useful with just a

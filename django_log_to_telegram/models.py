@@ -9,8 +9,8 @@ class BotData(models.Model):
 
     api_url = 'https://api.telegram.org/'
 
-    bot_token = models.CharField(max_length=45)
-    chat_id = models.CharField(max_length=8, blank=True, null=True)
+    bot_token = models.CharField(max_length=50)
+    chat_id = models.CharField(max_length=16, blank=True, null=True)
 
     def bot_url(self):
         return '{api_url}bot{bot_id}/'.format(

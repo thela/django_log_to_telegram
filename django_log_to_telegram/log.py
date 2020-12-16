@@ -98,5 +98,8 @@ class AdminTelegramHandler(logging.Handler):
             bot_url=self.bot_data.bot_url()
         )
         prepared_data = self.prepare_json_for_answer(message)
-        requests.post(message_url, json=prepared_data)
+        try:
+            requests.post(message_url, json=prepared_data, timeout=5)
+        except requests.exceptions.Timeout:
+            pass
 

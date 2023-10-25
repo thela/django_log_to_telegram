@@ -85,6 +85,7 @@ class AdminTelegramHandler(logging.Handler):
         if self.bot_data.chat_id:
             json_data = {
                 "chat_id": self.bot_data.chat_id,
+                "message_thread_id": self.bot_data.topic_id,
                 "text": data,
                 "parse_mode": 'HTML',
             }

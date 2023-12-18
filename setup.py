@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 from django_log_to_telegram import name
 
-with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
+with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     README = readme.read()
 
 # allow setup.py to be run from any path
@@ -11,7 +11,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name=name,
-    version='2020.01.23',
+    version='2020.03.02',
     packages=find_packages(),
     include_package_data=True,
     license='GNU General Public License v3 (GPLv3)',  # example license
